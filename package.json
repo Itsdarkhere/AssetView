@@ -1,6 +1,6 @@
 {
   "name": "assetview",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -14,6 +14,7 @@
   "author": "Itsdarkhere",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2"
   }
 }
