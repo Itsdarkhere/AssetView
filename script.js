@@ -37,7 +37,7 @@ function isLightColor(color) {
 }
 
 app.get('/', (req, res) => {
-    fs.readdir(directoryPath, (err, filenames) => {
+    fs.readdir(directoryPath, { withFileTypes: true }, (err, filenames) => {
         if (err) {
             res.status(500).send('Error reading directory');
             return;
@@ -58,28 +58,34 @@ app.get('/', (req, res) => {
             </head>
             <body>`;
 
-        for (const filename of filenames) {
-            try {
-                const filePath = path.join(directoryPath, filename);
-                const fileExt = path.extname(filename).toLocaleLowerCase();
-                let backgroundColorClass = 'light-background';
+        for (const file of filenames) {
+            if (file.isFile()) {
+                const filename = file.name;
+                const fileExt = path.extname(filename).toLowerCase();
+                const supportedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
 
-                if (fileExt === '.svg') {
-                    const svgContent = fs.readFileSync(filePath, 'utf8');
-                    const $ = cheerio.load(svgContent);
-                    const fill = $('path').attr('fill');
+                if (supportedExtensions.includes(fileExt)) {
+                    try {
+                        const filePath = path.join(directoryPath, filename);
+                        let backgroundColorClass = 'light-background';
 
-                    if (fill && isLightColor(fill)) {
-                        backgroundColorClass = 'dark-background';
+                        if (fileExt === '.svg') {
+                            const svgContent = fs.readFileSync(filePath, 'utf8');
+                            const $ = cheerio.load(svgContent);
+                            const fill = $('path').attr('fill');
+
+                            if (fill && isLightColor(fill)) {
+                                backgroundColorClass = 'dark-background';
+                            }
+                        }
+
+                        html += `<div class="divone"><div class="divtwo ${backgroundColorClass}"><img src="/file/${encodeURIComponent(filename)}" alt="${filename}"/></div><p>${filename}</p></div>`;
+                    } catch (err) {
+                        console.error(err);
                     }
                 }
-
-                html += `<div class="divone"><div class="divtwo ${backgroundColorClass}"><img src="/file/${encodeURIComponent(filename)}" alt="${filename}"/></div><p>${filename}</p></div>`;
-            } catch (err) {
-                console.error(err);
             }
         }
-
         html += '</body></html>';
         res.send(html);
     });
