@@ -1,0 +1,19 @@
+{
+  "name": "assetview",
+  "version": "1.0.4",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "assetview": "node script.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "assetview": "./script.js"
+  },
+  "keywords": [],
+  "author": "Itsdarkhere",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
