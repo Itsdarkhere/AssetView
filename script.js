@@ -69,7 +69,6 @@ app.get('/', (req, res) => {
                     const $ = cheerio.load(svgContent);
                     const fill = $('path').attr('fill');
 
-                    console.log(fill);
                     if (fill && isLightColor(fill)) {
                         backgroundColorClass = 'dark-background';
                     }
